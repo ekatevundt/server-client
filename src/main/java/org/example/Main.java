@@ -8,23 +8,44 @@ public class Main {
     public static void main(String[] args) {
 
         try (ServerSocket serverSocket = new ServerSocket(8080);) {
-            try (Socket clientSocket = serverSocket.accept();
-                 // OutputStreamWriter out = new OutputStreamWriter(clientSocket.getOutputStream());
-                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            ) {
-                int client = 1;
-                while (true) {
+            int clients = 1;
+            String city = null;
+            while (true) {
+                try (Socket clientSocket = serverSocket.accept();
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                ) {
+                    if (clients == 1) {
 
-                    System.out.println("New connection accepted");
-                    final String name = in.readLine();
-                    out.write("you are client number " + client+ " ");
-                    client++;
-                    out.println(String.format("Hi %s, your port is %d", name, clientSocket.getPort()));
+                        System.out.println("New connection accepted");
+                        out.println("???");
+                        city = in.readLine();
+                        System.out.println("You entered: " + city);
+                        out.println("OK");
+
+                    } else if (clients > 1) {
+                        out.println(city);
+
+                        String newCity = in.readLine();
+                        int cityLength = city.length();
+                        char first = city.charAt(cityLength - 1);
+                        char next = newCity.charAt(0);
+                        if (first == next) {
+                            System.out.println("You entered: " + newCity);
+                            out.println("OK");
+                            city = newCity;
+                        } else {
+                            System.out.println("You entered: " + newCity);
+                            out.println("NOT OK");
+                        }
+                    }
+                    clients++;
+
+
                 }
             }
         } catch (IOException e) {
-            System.out.println("You have problems:" + e);
+            System.out.println("Can't start the server " + e);
         }
     }
 }

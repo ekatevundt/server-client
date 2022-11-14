@@ -1,12 +1,15 @@
 package org.example;
 
-import java.io.*;
-import java.net.ServerSocket;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import static java.lang.System.out;
 
-public class Main2 {
+public class ThirdClient {
+    //третий игрок
     public static void main(String[] args) {
         String host = "127.0.0.1";
         int port = 8080;
@@ -16,9 +19,10 @@ public class Main2 {
         ) {
             while (true) {
                 System.out.println("New connection accepted");
-                out.println("Cat");
-                String message = in.readLine();
-                System.out.println(message);
+                System.out.println(in.readLine());
+                out.println("warsaw");
+                System.out.println(in.readLine());
+                break;
             }
         } catch (IOException e) {
             out.println(e);
